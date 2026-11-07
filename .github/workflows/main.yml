@@ -1,0 +1,16 @@
+name: stamp-wasm
+on:
+  workflow_dispatch:        # 需要手动触发一次就够
+
+jobs:
+  stamp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Append random custom section to protocol.wasm
+        run: |
+          node -e "const fs=require('fs'),c=require('crypto'),n=16+(Math.random()*110|0);fs.appendFileSync('protocol.wasm',Buffer.concat([Buffer.from([0,n+2,1,115]),c.randomBytes(n)]))"
+
+      - name: Show result
+        run: ls -l protocol.wasm && xxd protocol.wasm | tail -5
